@@ -1,0 +1,5 @@
+entityqueue.add:
+  route_name: entityqueue.add
+  title: 'Add EntityQueue'
+  appears_on:
+    - entityqueue.list

@@ -1,0 +1,12 @@
+entityqueue.entityqueue.*:
+  type: config_entity
+  label: 'EntityQueue Config'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    uuid:
+      type: string
