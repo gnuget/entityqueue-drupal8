@@ -25,7 +25,6 @@ use Drupal\entityqueue\EntityQueueInterface;
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",
- *     "uuid" = "uuid"
  *   },
  *   links = {
  *     "edit-form" = "entityqueue.edit",
@@ -41,13 +40,6 @@ class EntityQueue  extends ConfigEntityBase implements EntityQueueInterface {
    * @var string
    */
   public $id;
-
-  /**
-   * The UUID for this entity.
-   *
-   * @var string
-   */
-  public $uuid;
 
   /**
    * @var string $label

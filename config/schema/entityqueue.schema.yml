@@ -8,5 +8,3 @@ entityqueue.entityqueue.*:
     label:
       type: label
       label: 'Label'
-    uuid:
-      type: string
