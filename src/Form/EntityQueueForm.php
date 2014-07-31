@@ -31,23 +31,23 @@ class EntityQueueForm extends EntityForm {
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
     $entityqueue = $this->entity;
-    $form['label'] = array(
+    $form['label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Label'),
       '#maxlength' => 255,
       '#default_value' => $entityqueue->label(),
       '#description' => $this->t("Label for the Example."),
       '#required' => TRUE,
-    );
-    $form['id'] = array(
+    ];
+    $form['id'] = [
       '#type' => 'machine_name',
       '#default_value' => $entityqueue->id(),
-      '#machine_name' => array(
-        'exists' => array($this, 'exist'),
-      ),
+      '#machine_name' => [
+        'exists' => [$this, 'exist'],
+      ],
       '#disabled' => !$entityqueue->isNew(),
-    );
-    // You will need additional form elements for your custom properties.
+    ];
+
     return $form;
   }
 
@@ -58,14 +58,14 @@ class EntityQueueForm extends EntityForm {
     $example = $this->entity;
     $status = $example->save();
     if ($status) {
-      drupal_set_message($this->t('Saved the %label EntityQueue.', array(
+      drupal_set_message($this->t('Saved the %label EntityQueue.', [
         '%label' => $example->label(),
-      )));
+      ]));
     }
     else {
-      drupal_set_message($this->t('The %label EntityQueue was not saved.', array(
+      drupal_set_message($this->t('The %label EntityQueue was not saved.', [
         '%label' => $example->label(),
-      )));
+      ]));
     }
     $form_state->set['redirect_route']['route_name'] = 'entityqueue.list';
   }
