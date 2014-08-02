@@ -21,7 +21,7 @@ use Drupal\entityqueue\EntityQueueInterface;
  *     }
  *   },
  *   config_prefix = "entityqueue",
- *   admin_permission = "administer site configuration",
+ *   admin_permission = "administer entityqueue",
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",
@@ -37,12 +37,58 @@ class EntityQueue  extends ConfigEntityBase implements EntityQueueInterface {
   /**
    * The EntityQueue ID.
    *
-   * @var string
+   * @var string.
    */
   public $id;
 
   /**
-   * @var string $label
+   * @var string $label.
    */
   public $label;
+
+  /**
+   * @var int $min_size.
+   */
+  public $min_size = 0;
+
+  /**
+   * @var int $max_size.
+   */
+  public $max_size = 10;
+
+  /**
+   * The ID of the EntityQueue Type plugin.
+   *
+   * @var string
+   */
+  protected $entityqueue_type;
+
+  /**
+   * A bag to store the EntityQueueType plugin.
+   *
+   * @var \Drupal\Core\Plugin\DefaultSinglePluginBag
+   */
+  protected $entityqueueTypeBag;
+
+  /**
+   * An array to store and load the EntityQueue Type plugin configuration.
+   * @var array
+   */
+  protected $entityQueueTypeConfig = array();
+
+  /**
+   * Overrides \Drupal\Core\Config\Entity\ConfigEntityBase::__construct();
+   */
+  public function __construct(array $values, $entity_type) {
+    parent::__construct($values, $entity_type);
+
+    if ($this->entityqueue_type) {
+
+      $this->$entityqueueTypeBag = new DefaultSinglePluginBag (
+        \Drupal::service('plugin.manager.entityqueue.entity'),
+        $this->entityqueue_type, $this->entityQueueTypeConfig
+      );
+
+    }
+  }
 }

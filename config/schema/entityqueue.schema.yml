@@ -8,3 +8,9 @@ entityqueue.entityqueue.*:
     label:
       type: label
       label: 'Label'
+    min_size:
+      type: int
+      label: 'Restrict this queue to a minimum of'
+    max_size:
+      type: int
+      label: 'and a maximum of'

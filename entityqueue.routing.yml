@@ -4,7 +4,7 @@ entityqueue.list:
     _entity_list: 'entityqueue'
     _title: 'EntityQueue'
   requirements:
-    _permission: 'administer site configuration'
+    _permission: 'administer entityqueue'
 
 entityqueue.add:
   path: '/admin/structure/entityqueue/add'
@@ -12,7 +12,7 @@ entityqueue.add:
     _entity_form: 'entityqueue.add'
     _title: 'Add Entityqueue'
   requirements:
-    _permission: 'administer site configuration'
+    _permission: 'administer entityqueue'
 
 entityqueue.edit:
   path: '/admin/structure/entityqueue/{entityqueue}/edit'
@@ -20,7 +20,7 @@ entityqueue.edit:
     _entity_form: 'entityqueue.edit'
     _title: 'Edit EntityQueue'
   requirements:
-    _permission: 'administer site configuration'
+    _permission: 'administer entityqueue'
 
 
 entityqueue.delete:
@@ -29,4 +29,4 @@ entityqueue.delete:
     _entity_form: 'entityqueue.delete'
     _title: 'Delete EntityQueue'
   requirements:
-    _permission: 'administer site configuration'
+    _permission: 'administer entityqueue'

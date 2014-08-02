@@ -36,7 +36,7 @@ class EntityQueueForm extends EntityForm {
       '#title' => $this->t('Label'),
       '#maxlength' => 255,
       '#default_value' => $entityqueue->label(),
-      '#description' => $this->t("Label for the Example."),
+      '#description' => $this->t("Label for the EntityQueue."),
       '#required' => TRUE,
     ];
     $form['id'] = [
@@ -48,6 +48,30 @@ class EntityQueueForm extends EntityForm {
       '#disabled' => !$entityqueue->isNew(),
     ];
 
+    $form['queue_properties'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Queue Properties'),
+    );
+
+    $form['queue_properties']['min_size'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Restrict this queue to a minimum of'),
+      '#default_value' => $entityqueue->min_size,
+    ];
+
+    $form['queue_properties']['max_size'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Restrict this queue to a minimum of'),
+      '#default_value' => $entityqueue->max_size,
+    ];
+
+    $form['queue_properties']['entityqueue_entity_type'] = array(
+      '#type' => 'select',
+      '#title' => t('Entity Type'),
+      '#options' => \Drupal::service('plugin.manager.entityqueue.entity')->getAllEntityQueueTypes(),
+      '#default_value' => '',
+    );
+
     return $form;
   }
 
@@ -55,19 +79,19 @@ class EntityQueueForm extends EntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    $example = $this->entity;
-    $status = $example->save();
+    $entityqueue = $this->entity;
+    $status = $entityqueue->save();
     if ($status) {
       drupal_set_message($this->t('Saved the %label EntityQueue.', [
-        '%label' => $example->label(),
+        '%label' => $entityqueue->label(),
       ]));
     }
     else {
       drupal_set_message($this->t('The %label EntityQueue was not saved.', [
-        '%label' => $example->label(),
+        '%label' => $entityqueue->label(),
       ]));
     }
-    $form_state->set['redirect_route']['route_name'] = 'entityqueue.list';
+    $form_state['redirect_route']['route_name'] = 'entityqueue.list';
   }
 
   public function exist($id) {
@@ -76,4 +100,4 @@ class EntityQueueForm extends EntityForm {
       ->execute();
     return (bool) $entity;
   }
-} 
+}

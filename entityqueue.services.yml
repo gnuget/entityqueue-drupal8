@@ -1,0 +1,4 @@
+services:
+  plugin.manager.entityqueue.entity:
+    class: Drupal\entityqueue\EntityQueuePluginManager
+    arguments: ['@container.namespaces', '@cache.default', '@module_handler']
