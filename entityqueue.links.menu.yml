@@ -1,0 +1,5 @@
+flag.admin.structure.entityqueue:
+  title: 'EntityQueue'
+  description: 'Manage entity queues.'
+  parent: system.admin_structure
+  route_name: entityqueue.list

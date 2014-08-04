@@ -1,6 +1,6 @@
-name: 'Entityqueue'
+name: Entityqueue
 type: module
-description: 'Allows users to collect entities in arbitrarily ordered lists.'
+description: Allows users to collect entities in arbitrarily ordered lists.
 package: Entityqueue
-version: VERSION
 core: 8.x
+configure: admin/structure/entityqueue
