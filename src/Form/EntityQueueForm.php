@@ -33,10 +33,10 @@ class EntityQueueForm extends EntityForm {
     $entityqueue = $this->entity;
     $form['label'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Label'),
+      '#title' => $this->t('Administrative title'),
       '#maxlength' => 255,
       '#default_value' => $entityqueue->label(),
-      '#description' => $this->t("Label for the EntityQueue."),
+      '#description' => $this->t("This will appear in the administrative interface to easily identify it."),
       '#required' => TRUE,
     ];
     $form['id'] = [
@@ -46,6 +46,13 @@ class EntityQueueForm extends EntityForm {
         'exists' => [$this, 'exist'],
       ],
       '#disabled' => !$entityqueue->isNew(),
+    ];
+
+    $form['id'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Handler'),
+      '#options' => \Drupal::service('plugin.manager.entityqueue.handler')->getAllEntityQueueHandlers(),
+      '#default_value' => '',
     ];
 
     $form['queue_properties'] = array(

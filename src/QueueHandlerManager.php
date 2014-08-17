@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Contains the EntityQueuePluginManager class.
+ * Contains the EntityQueueHandlerPluginManager class.
  */
 
 namespace Drupal\entityqueue;
@@ -11,10 +11,10 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 
 
-class EntityQueuePluginManager extends DefaultPluginManager {
+class QueueHandlerManager extends DefaultPluginManager {
 
   /**
-   * Constructs a new EntityQueuePluginManager.
+   * Constructs a new EntityQueueHandlerManager.
    *
    * @param \Traversable $namespaces
    *   An object that implements \Traversable which contains the root paths
@@ -25,26 +25,25 @@ class EntityQueuePluginManager extends DefaultPluginManager {
    *   The module handler to invoke the alter hook with.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/EntityQueue', $namespaces, $module_handler, 'Drupal\entityqueue\Annotation\EntityQueueType');
+    parent::__construct('Plugin/QueueHandler', $namespaces, $module_handler, 'Drupal\entityqueue\Annotation\QueueHandler');
 
-    $this->setCacheBackend($cache_backend, 'entityqueue');
+    $this->setCacheBackend($cache_backend, 'queuehandler');
   }
 
   /**
-   * Gets all entityqueue types.
+   * Gets all handlers.
    *
    * @return array
-   *   Returns all entityqueue types.
+   *   Returns all entityqueue handlers.
    */
-  public function getAllEntityQueueTypes() {
-    $types = [];
-
+  public function getAllEntityQueueHandlers() {
+    $handlers = [];
     var_dump($this->getDefinitions());
     foreach ($this->getDefinitions() as $plugin_id => $plugin_def) {
-      $types[$plugin_id] = $plugin_def['title'];
+      $handlers[$plugin_id] = $plugin_def['title'];
     }
-    asort($types);
+    asort($handlers);
 
-    return $types;
+    return $handlers;
   }
 }
