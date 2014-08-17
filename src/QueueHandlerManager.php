@@ -38,7 +38,6 @@ class QueueHandlerManager extends DefaultPluginManager {
    */
   public function getAllEntityQueueHandlers() {
     $handlers = [];
-    var_dump($this->getDefinitions());
     foreach ($this->getDefinitions() as $plugin_id => $plugin_def) {
       $handlers[$plugin_id] = $plugin_def['title'];
     }

@@ -39,7 +39,6 @@ class EntityQueuePluginManager extends DefaultPluginManager {
   public function getAllEntityQueueTypes() {
     $types = [];
 
-    var_dump($this->getDefinitions());
     foreach ($this->getDefinitions() as $plugin_id => $plugin_def) {
       $types[$plugin_id] = $plugin_def['title'];
     }

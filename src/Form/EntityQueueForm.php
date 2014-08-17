@@ -48,17 +48,32 @@ class EntityQueueForm extends EntityForm {
       '#disabled' => !$entityqueue->isNew(),
     ];
 
-    $form['id'] = [
+    $form['handler'] = [
       '#type' => 'select',
       '#title' => $this->t('Handler'),
       '#options' => \Drupal::service('plugin.manager.entityqueue.handler')->getAllEntityQueueHandlers(),
       '#default_value' => '',
+      '#required' => true,
     ];
 
-    $form['queue_properties'] = array(
-      '#type' => 'fieldset',
-      '#title' => t('Queue Properties'),
-    );
+    $form['entityqueue_entity_type'] = [
+      '#type' => 'select',
+      '#title' => t('Entity Type'),
+      '#options' => \Drupal::service('plugin.manager.entityqueue.entity')->getAllEntityQueueTypes(),
+      '#default_value' => '',
+      '#required' => true,
+    ];
+
+    $form['queue_tabs'] = [
+      '#type' => 'vertical_tabs',
+      '#title' => '',
+    ];
+
+    $form['queue_properties'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Queue Properties'),
+      '#group' => 'queue_tabs'
+    ];
 
     $form['queue_properties']['min_size'] = [
       '#type' => 'textfield',
@@ -72,12 +87,17 @@ class EntityQueueForm extends EntityForm {
       '#default_value' => $entityqueue->max_size,
     ];
 
-    $form['queue_properties']['entityqueue_entity_type'] = array(
-      '#type' => 'select',
-      '#title' => t('Entity Type'),
-      '#options' => \Drupal::service('plugin.manager.entityqueue.entity')->getAllEntityQueueTypes(),
-      '#default_value' => '',
-    );
+    $form['queue_field_settings'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Field Settings'),
+      '#group' => 'queue_tabs'
+    ];
+
+    $form['queue_field_settings']['test'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('test'),
+      '#default_value' => 'testing',
+    ];
 
     return $form;
   }
