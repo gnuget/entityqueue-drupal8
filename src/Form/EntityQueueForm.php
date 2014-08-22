@@ -2,21 +2,32 @@
 
 namespace Drupal\entityqueue\Form;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityForm;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\entityqueue\EntityQueuePluginManager;
+use Drupal\entityqueue\QueueHandlerManager;
+use Drupal\Core\Entity\EntityManagerInterface;
 
+class EntityQueueForm extends EntityForm  {
 
-class EntityQueueForm extends EntityForm {
+  var $entityQuery;
+  var $pluginManagerHandler;
+  var $pluginManagerEntity;
+  var $entityManager;
 
   /**
    * @param \Drupal\Core\Entity\Query\QueryFactory $entity_query
-   *   The entity query.
+   * @param \Drupal\Core\Entity\EntityManagerInterface
+   * @param \Drupal\entityqueue\QueueHandlerManager
+   * @param \Drupal\entityqueue\EntityQueuePluginManager
    */
-  public function __construct(QueryFactory $entity_query, $entity_manager, $plugin_manager_handler, $plugin_manager_entity) {
+  public function __construct(QueryFactory $entity_query, EntityManagerInterface $entity_manager, QueueHandlerManager $plugin_manager_handler, EntityQueuePluginManager $plugin_manager_entity) {
     $this->entityQuery = $entity_query;
+    $this->pluginManagerHandler = $plugin_manager_handler;
+    $this->pluginManagerEntity = $plugin_manager_entity;
+    $this->entityManager = $entity_manager;
   }
 
   /**
@@ -24,7 +35,7 @@ class EntityQueueForm extends EntityForm {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.query')
+      $container->get('entity.query'),
       $container->get('entity.manager'),
       $container->get('plugin.manager.entityqueue.handler'),
       $container->get('plugin.manager.entityqueue.entity')
@@ -54,22 +65,47 @@ class EntityQueueForm extends EntityForm {
     $form['handler'] = [
       '#type' => 'select',
       '#title' => $this->t('Handler'),
-      '#options' => \Drupal::service('plugin.manager.entityqueue.handler')->getAllEntityQueueHandlers(),
+      '#options' => $this->pluginManagerHandler->getAllEntityQueueHandlers(),
       '#default_value' => '',
       '#required' => true,
     ];
 
-    $form['entityqueue_entity_type'] = [
+    $form['target_type'] = [
       '#type' => 'select',
       '#title' => t('Entity Type'),
-      '#options' => \Drupal::service('plugin.manager.entityqueue.entity')->getAllEntityQueueTypes(),
+      '#options' => $this->pluginManagerEntity->getAllEntityQueueTypes(),
       '#default_value' => '',
       '#required' => true,
+      '#ajax' => [
+        'callback' => [$this, 'updateSelectedQueueType'],
+        'wrapper' => 'edit-target-bundles',
+        'method' => 'replace',
+        'event' => 'change',
+      ],
     ];
 
     $form['queue_tabs'] = [
       '#type' => 'vertical_tabs',
       '#title' => '',
+    ];
+
+    $form['queue_field_settings'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Field Settings'),
+      '#group' => 'queue_tabs'
+    ];
+
+    $options = array();
+    foreach ($this->entityManager->getDefinitions() as $entity_type) {
+      if ($entity_type->isFieldable()) {
+        $options[$entity_type->id()] = $entity_type->getLabel();
+      }
+    }
+    $form['queue_field_settings']['target_bundles'] = [
+      '#type' => 'checkboxes',
+      '#title' => $this->t('Content types'),
+      '#options' => $options,
+      '#description' => 'The bundles of the entity type that can be referenced. Optional, leave empty for all bundles.',
     ];
 
     $form['queue_properties'] = [
@@ -88,18 +124,6 @@ class EntityQueueForm extends EntityForm {
       '#type' => 'textfield',
       '#title' => $this->t('Restrict this queue to a minimum of'),
       '#default_value' => $entityqueue->max_size,
-    ];
-
-    $form['queue_field_settings'] = [
-      '#type' => 'details',
-      '#title' => $this->t('Field Settings'),
-      '#group' => 'queue_tabs'
-    ];
-
-    $form['queue_field_settings']['test'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('test'),
-      '#default_value' => 'testing',
     ];
 
     return $form;
@@ -129,5 +153,12 @@ class EntityQueueForm extends EntityForm {
       ->condition('id', $id)
       ->execute();
     return (bool) $entity;
+  }
+
+  /**
+   *
+   */
+  public function updateSelectedQueueType($form, FormStateInterface $form_state) {
+    return $form['queue_field_settings']['target_bundles'];
   }
 }
