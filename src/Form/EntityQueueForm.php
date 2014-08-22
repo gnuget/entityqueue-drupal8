@@ -15,7 +15,7 @@ class EntityQueueForm extends EntityForm {
    * @param \Drupal\Core\Entity\Query\QueryFactory $entity_query
    *   The entity query.
    */
-  public function __construct(QueryFactory $entity_query) {
+  public function __construct(QueryFactory $entity_query, $entity_manager, $plugin_manager_handler, $plugin_manager_entity) {
     $this->entityQuery = $entity_query;
   }
 
@@ -25,6 +25,9 @@ class EntityQueueForm extends EntityForm {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity.query')
+      $container->get('entity.manager'),
+      $container->get('plugin.manager.entityqueue.handler'),
+      $container->get('plugin.manager.entityqueue.entity')
     );
   }
 
