@@ -12,7 +12,7 @@ use Drupal\entityqueue\EntityQueueInterface;
  * @ConfigEntityType(
  *   id = "entityqueue",
  *   label = @Translation("EntityQueue"),
- *   controllers = {
+ *   handlers = {
  *     "list_builder" = "Drupal\entityqueue\Controller\EntityQueueListBuilder",
  *     "form" = {
  *       "add" = "Drupal\entityqueue\Form\EntityQueueForm",

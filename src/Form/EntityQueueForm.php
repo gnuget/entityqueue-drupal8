@@ -78,7 +78,7 @@ class EntityQueueForm extends EntityForm  {
       '#required' => true,
       '#ajax' => [
         'callback' => [$this, 'updateSelectedQueueType'],
-        'wrapper' => 'edit-target-bundles',
+        'wrapper' => 'edit-bundles',
         'method' => 'replace',
         'event' => 'change',
       ],
@@ -95,17 +95,20 @@ class EntityQueueForm extends EntityForm  {
       '#group' => 'queue_tabs'
     ];
 
-    $options = array();
-    foreach ($this->entityManager->getDefinitions() as $entity_type) {
-      if ($entity_type->isFieldable()) {
-        $options[$entity_type->id()] = $entity_type->getLabel();
+    $options = [];
+    foreach ($this->entityManager->getStorage('node_type')->loadMultiple() as $type) {
+      if ($this->entityManager->getAccessControlHandler('node')->createAccess($type->type)) {
+        $options[$type->type] = $type->name;
       }
     }
+
     $form['queue_field_settings']['target_bundles'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('Content types'),
       '#options' => $options,
       '#description' => 'The bundles of the entity type that can be referenced. Optional, leave empty for all bundles.',
+      '#prefix' => '<div id="edit-bundles">',
+      '#suffix' => '</div>',
     ];
 
     $form['queue_properties'] = [
