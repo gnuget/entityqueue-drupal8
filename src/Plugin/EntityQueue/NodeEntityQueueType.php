@@ -6,11 +6,10 @@
 
 namespace Drupal\entityqueue\Plugin\EntityQueue;
 
-use Drupal\entityqueue\EntityQueueBase;
+use Drupal\entityqueue\EntityQueueTypeBase;
 
 /**
  * Class NodeEntityQueueType
- * @package Drupal\entityqueue\Plugin\EntityQueue
  *
  * Implements a node entityqueue type.
  *
@@ -20,6 +19,23 @@ use Drupal\entityqueue\EntityQueueBase;
  *   entity_type = "node",
  * )
  */
-class NodeEntityQueueType extends EntityQueueBase {
+class NodeEntityQueueType extends EntityQueueTypeBase {
 
+  /**
+   * Return the list of content types.
+   *
+   * @return Array.
+   */
+  public function getBundles() {
+
+    $entityManager =  \Drupal::entityManager();
+
+    $options = [];
+    foreach ($entityManager->getStorage('node_type')->loadMultiple() as $type) {
+      if ($entityManager->getAccessControlHandler('node')->createAccess($type->type)) {
+        $options[$type->type] = $type->name;
+      }
+    }
+    return $options;
+  }
 }

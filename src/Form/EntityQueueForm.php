@@ -45,6 +45,7 @@ class EntityQueueForm extends EntityForm  {
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
     $entityqueue = $this->entity;
+
     $form['label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Administrative title'),
@@ -74,7 +75,7 @@ class EntityQueueForm extends EntityForm  {
       '#type' => 'select',
       '#title' => t('Entity Type'),
       '#options' => $this->pluginManagerEntity->getAllEntityQueueTypes(),
-      '#default_value' => '',
+      '#default_value' => $entityqueue->getType(),
       '#required' => true,
       '#ajax' => [
         'callback' => [$this, 'updateSelectedQueueType'],
@@ -95,12 +96,8 @@ class EntityQueueForm extends EntityForm  {
       '#group' => 'queue_tabs'
     ];
 
-    $options = [];
-    foreach ($this->entityManager->getStorage('node_type')->loadMultiple() as $type) {
-      if ($this->entityManager->getAccessControlHandler('node')->createAccess($type->type)) {
-        $options[$type->type] = $type->name;
-      }
-    }
+    $type_plugin = $entityqueue->getEntityQueueTypePlugin();
+    $options = $type_plugin->getBundles();
 
     $form['queue_field_settings']['target_bundles'] = [
       '#type' => 'checkboxes',

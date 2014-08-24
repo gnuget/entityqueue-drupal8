@@ -5,6 +5,7 @@ namespace Drupal\entityqueue\entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\entityqueue\EntityQueueInterface;
+use Drupal\Core\Plugin\DefaultSinglePluginBag;
 
 /**
  * Defines the EntityQueue entity class.
@@ -61,7 +62,7 @@ class EntityQueue  extends ConfigEntityBase implements EntityQueueInterface {
    *
    * @var string
    */
-  protected $entityqueue_type;
+  protected $type;
 
   /**
    * A bag to store the EntityQueueType plugin.
@@ -82,13 +83,28 @@ class EntityQueue  extends ConfigEntityBase implements EntityQueueInterface {
   public function __construct(array $values, $entity_type) {
     parent::__construct($values, $entity_type);
 
-    if ($this->entityqueue_type) {
-
-      $this->$entityqueueTypeBag = new DefaultSinglePluginBag (
-        \Drupal::service('plugin.manager.entityqueue.entity'),
-        $this->entityqueue_type, $this->entityQueueTypeConfig
-      );
-
+    if (!$this->type) {
+      $this->type = 'EntityQueue_node';
     }
+
+    $this->entityqueueTypeBag = new DefaultSinglePluginBag (
+      \Drupal::service('plugin.manager.entityqueue.entity'),
+      $this->type, $this->entityQueueTypeConfig
+    );
+  }
+
+  /**
+   * Get the Entityqueue type plugin for this entityqueue.
+   */
+  public function getEntityQueueTypePlugin() {
+    return $this->entityqueueTypeBag->get($this->type);
+  }
+
+  /**
+   *
+   *
+   */
+  public function getType() {
+    return $this->type;
   }
 }
