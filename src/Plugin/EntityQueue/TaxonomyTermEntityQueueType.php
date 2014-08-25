@@ -6,7 +6,7 @@
 
 namespace Drupal\entityqueue\Plugin\EntityQueue;
 
-use Drupal\entityqueue\EntityQueueBase;
+use Drupal\entityqueue\EntityQueueTypeBase;
 
 /**
  * Class TaxonomyTermEntityQueueType
@@ -20,6 +20,23 @@ use Drupal\entityqueue\EntityQueueBase;
  *   entity_type = "taxonomy_term",
  * )
  */
-class TaxonomyTermEntityQueueType extends EntityQueueBase {
+class TaxonomyTermEntityQueueType extends EntityQueueTypeBase {
 
+  /**
+   * Return the list of content types.
+   *
+   * @return Array.
+   */
+  public function getBundles() {
+
+    $entityManager =  \Drupal::entityManager();
+
+    $options = [];
+    foreach ($entityManager->getStorage('taxonomy_vocabulary')->loadMultiple() as $type) {
+      if ($entityManager->getAccessControlHandler('taxonomy_term')->createAccess($type->type)) {
+        $options[$type->vid] = $type->name;
+      }
+    }
+    return $options;
+  }
 }

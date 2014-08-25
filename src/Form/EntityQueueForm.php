@@ -96,6 +96,7 @@ class EntityQueueForm extends EntityForm  {
       '#group' => 'queue_tabs'
     ];
 
+
     $type_plugin = $entityqueue->getEntityQueueTypePlugin();
     $options = $type_plugin->getBundles();
 
@@ -159,6 +160,14 @@ class EntityQueueForm extends EntityForm  {
    *
    */
   public function updateSelectedQueueType($form, FormStateInterface $form_state) {
+    $entityqueue = $this->entity;
+    $type_plugin = $form_state->getValue('target_type');
+
+    $type_plugin = $entityqueue->getEntityQueueTypePlugin($type_plugin);
+    $options = $type_plugin->getBundles();
+
+    $form['queue_field_settings']['target_bundles']['#options'] = $options;
+
     return $form['queue_field_settings']['target_bundles'];
   }
 }

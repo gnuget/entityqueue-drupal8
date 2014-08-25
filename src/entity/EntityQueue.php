@@ -96,8 +96,13 @@ class EntityQueue  extends ConfigEntityBase implements EntityQueueInterface {
   /**
    * Get the Entityqueue type plugin for this entityqueue.
    */
-  public function getEntityQueueTypePlugin() {
-    return $this->entityqueueTypeBag->get($this->type);
+  public function getEntityQueueTypePlugin($type) {
+
+    if (empty($type)) {
+      $type = $this->type;
+    }
+
+    return $this->entityqueueTypeBag->get($type);
   }
 
   /**
