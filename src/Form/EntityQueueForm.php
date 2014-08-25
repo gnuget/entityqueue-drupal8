@@ -166,7 +166,19 @@ class EntityQueueForm extends EntityForm  {
     $type_plugin = $entityqueue->getEntityQueueTypePlugin($type_plugin);
     $options = $type_plugin->getBundles();
 
-    $form['queue_field_settings']['target_bundles']['#options'] = $options;
+    // Deleting the old options.
+    $children = \Drupal\Core\Render\Element::children($form['queue_field_settings']['target_bundles']);
+    foreach ($children as $child) {
+      unset($form['queue_field_settings']['target_bundles'][$child]);
+    }
+
+    // Adding the new ones.
+    foreach ($options as $option) {
+      $form['queue_field_settings']['target_bundles'][$option] = [
+        '#type' => 'checkbox',
+        '#title' => $option,
+      ];
+    }
 
     return $form['queue_field_settings']['target_bundles'];
   }
