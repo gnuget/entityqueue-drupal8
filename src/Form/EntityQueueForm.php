@@ -8,7 +8,6 @@ use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\entityqueue\EntityQueuePluginManager;
 use Drupal\entityqueue\QueueHandlerManager;
-use Drupal\Core\Entity\EntityManagerInterface;
 
 class EntityQueueForm extends EntityForm  {
 
@@ -19,15 +18,13 @@ class EntityQueueForm extends EntityForm  {
 
   /**
    * @param \Drupal\Core\Entity\Query\QueryFactory $entity_query
-   * @param \Drupal\Core\Entity\EntityManagerInterface
    * @param \Drupal\entityqueue\QueueHandlerManager
    * @param \Drupal\entityqueue\EntityQueuePluginManager
    */
-  public function __construct(QueryFactory $entity_query, EntityManagerInterface $entity_manager, QueueHandlerManager $plugin_manager_handler, EntityQueuePluginManager $plugin_manager_entity) {
+  public function __construct(QueryFactory $entity_query, QueueHandlerManager $plugin_manager_handler, EntityQueuePluginManager $plugin_manager_entity) {
     $this->entityQuery = $entity_query;
     $this->pluginManagerHandler = $plugin_manager_handler;
     $this->pluginManagerEntity = $plugin_manager_entity;
-    $this->entityManager = $entity_manager;
   }
 
   /**
@@ -36,7 +33,6 @@ class EntityQueueForm extends EntityForm  {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity.query'),
-      $container->get('entity.manager'),
       $container->get('plugin.manager.entityqueue.handler'),
       $container->get('plugin.manager.entityqueue.entity')
     );
@@ -67,11 +63,11 @@ class EntityQueueForm extends EntityForm  {
       '#type' => 'select',
       '#title' => $this->t('Handler'),
       '#options' => $this->pluginManagerHandler->getAllEntityQueueHandlers(),
-      '#default_value' => '',
+      '#default_value' => $entityqueue->getHandler(),
       '#required' => true,
     ];
 
-    $form['target_type'] = [
+    $form['type'] = [
       '#type' => 'select',
       '#title' => t('Entity Type'),
       '#options' => $this->pluginManagerEntity->getAllEntityQueueTypes(),
@@ -107,6 +103,7 @@ class EntityQueueForm extends EntityForm  {
       '#description' => 'The bundles of the entity type that can be referenced. Optional, leave empty for all bundles.',
       '#prefix' => '<div id="edit-bundles">',
       '#suffix' => '</div>',
+      '#default_value' => $entityqueue->getTargetBundles(),
     ];
 
     $form['queue_properties'] = [
@@ -135,6 +132,7 @@ class EntityQueueForm extends EntityForm  {
    */
   public function save(array $form, FormStateInterface $form_state) {
     $entityqueue = $this->entity;
+
     $status = $entityqueue->save();
     if ($status) {
       drupal_set_message($this->t('Saved the %label EntityQueue.', [
@@ -161,7 +159,7 @@ class EntityQueueForm extends EntityForm  {
    */
   public function updateSelectedQueueType($form, FormStateInterface $form_state) {
     $entityqueue = $this->entity;
-    $type_plugin = $form_state->getValue('target_type');
+    $type_plugin = $form_state->getValue('type');
 
     $type_plugin = $entityqueue->getEntityQueueTypePlugin($type_plugin);
     $options = $type_plugin->getBundles();

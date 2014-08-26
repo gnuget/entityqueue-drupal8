@@ -62,7 +62,18 @@ class EntityQueue  extends ConfigEntityBase implements EntityQueueInterface {
    *
    * @var string
    */
-  protected $type;
+  public $type;
+
+
+  /**
+   * Handler
+   */
+  public $handler = 'simple';
+
+  /**
+   * The bundle of the entityqueue
+   */
+  public $target_bundles = '';
 
   /**
    * A bag to store the EntityQueueType plugin.
@@ -111,5 +122,13 @@ class EntityQueue  extends ConfigEntityBase implements EntityQueueInterface {
    */
   public function getType() {
     return $this->type;
+  }
+
+  public function getHandler() {
+    return $this->handler;
+  }
+
+  public function getTargetBundles() {
+    return $this->target_bundles;
   }
 }

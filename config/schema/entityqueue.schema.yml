@@ -14,3 +14,9 @@ entityqueue.entityqueue.*:
     max_size:
       type: int
       label: 'and a maximum of'
+    handler:
+      type: string
+      label: 'Handler'
+    type:
+      type: string
+      label: 'Type'
