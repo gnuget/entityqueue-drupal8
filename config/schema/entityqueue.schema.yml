@@ -17,6 +17,7 @@ entityqueue.entityqueue.*:
     handler:
       type: string
       label: 'Handler'
-    type:
-      type: string
-      label: 'Type'
+    target_bundles:
+      type: sequence
+      sequence:
+        - type: string

@@ -65,13 +65,14 @@ class EntityQueueForm extends EntityForm  {
       '#options' => $this->pluginManagerHandler->getAllEntityQueueHandlers(),
       '#default_value' => $entityqueue->getHandler(),
       '#required' => true,
+      '#disabled' => !$entityqueue->isNew(),
     ];
 
-    $form['type'] = [
+    $form['target_type'] = [
       '#type' => 'select',
       '#title' => t('Entity Type'),
       '#options' => $this->pluginManagerEntity->getAllEntityQueueTypes(),
-      '#default_value' => $entityqueue->getType(),
+      '#default_value' => $entityqueue->getTargetType(),
       '#required' => true,
       '#ajax' => [
         'callback' => [$this, 'updateSelectedQueueType'],
@@ -79,6 +80,7 @@ class EntityQueueForm extends EntityForm  {
         'method' => 'replace',
         'event' => 'change',
       ],
+      '#disabled' => !$entityqueue->isNew(),
     ];
 
     $form['queue_tabs'] = [
@@ -159,9 +161,9 @@ class EntityQueueForm extends EntityForm  {
    */
   public function updateSelectedQueueType($form, FormStateInterface $form_state) {
     $entityqueue = $this->entity;
-    $type_plugin = $form_state->getValue('type');
-
+    $type_plugin = $form_state->getValue('target_type');
     $type_plugin = $entityqueue->getEntityQueueTypePlugin($type_plugin);
+
     $options = $type_plugin->getBundles();
 
     // Deleting the old options.

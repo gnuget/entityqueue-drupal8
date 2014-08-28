@@ -62,7 +62,7 @@ class EntityQueue  extends ConfigEntityBase implements EntityQueueInterface {
    *
    * @var string
    */
-  public $type;
+  public $target_type = '';
 
 
   /**
@@ -120,8 +120,8 @@ class EntityQueue  extends ConfigEntityBase implements EntityQueueInterface {
    *
    *
    */
-  public function getType() {
-    return $this->type;
+  public function getTargetType() {
+    return $this->target_type;
   }
 
   public function getHandler() {
