@@ -1,0 +1,90 @@
+<?php
+
+/**
+ * @file
+ * EntityQueue module install/schema/update hooks.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function entityqueue_schema() {
+  $schema = [];
+
+  $schema['entityqueue_subqueue'] = [
+    'description' => 'Stores global information for each subqueue.',
+    'fields' => [
+      'subqueue_id' => [
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique subqueue ID.',
+      ],
+      'queue' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The queue (bundle) of this subqueue.',
+      ],
+      'name' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The machine-readable name of this subqueue.',
+      ],
+      'label' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The human-readable name of this subqueue.',
+      ],
+      'language' => [
+        'description' => 'The {languages}.language of this subqueue.',
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'module' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => 'The name of the module that created this subqueue.',
+      ],
+      'uid' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => NULL,
+        'description' => 'The {users}.uid who created this subqueue.',
+      ],
+      'data' => [
+        'type' => 'blob',
+        'size' => 'big',
+        'not null' => TRUE,
+        'serialize' => TRUE,
+        'description' => 'Serialized data containing the subqueue properties that do not warrant a dedicated column.',
+      ],
+    ],
+    'primary key' => ['subqueue_id'],
+    'unique keys' => [
+      'name' => ['name'],
+    ],
+    'indexes' => [
+      'queue' => ['queue'],
+      'module' => ['module'],
+      'uid' => ['uid'],
+    ],
+  ];
+
+  return $schema;
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function entityqueue_uninstall() {
+  drupal_set_message(t('EntityQueue has been uninstalled.'));
+}
