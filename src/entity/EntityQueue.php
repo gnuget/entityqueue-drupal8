@@ -5,7 +5,7 @@ namespace Drupal\entityqueue\entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\entityqueue\EntityQueueInterface;
-use Drupal\Core\Plugin\DefaultSinglePluginBag;
+use Drupal\Core\Plugin\DefaultSingleLazyPluginCollection;
 
 /**
  * Defines the EntityQueue entity class.
@@ -98,7 +98,7 @@ class EntityQueue  extends ConfigEntityBase implements EntityQueueInterface {
       $this->type = 'EntityQueue_node';
     }
 
-    $this->entityqueueTypeBag = new DefaultSinglePluginBag (
+    $this->entityqueueTypeBag = new DefaultSingleLazyPluginCollection (
       \Drupal::service('plugin.manager.entityqueue.entity'),
       $this->type, $this->entityQueueTypeConfig
     );

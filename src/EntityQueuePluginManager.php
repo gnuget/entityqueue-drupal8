@@ -25,7 +25,7 @@ class EntityQueuePluginManager extends DefaultPluginManager {
    *   The module handler to invoke the alter hook with.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/EntityQueue', $namespaces, $module_handler, 'Drupal\entityqueue\Annotation\EntityQueueType');
+    parent::__construct('Plugin/EntityQueue', $namespaces, $module_handler, null, 'Drupal\entityqueue\Annotation\EntityQueueType');
 
     $this->setCacheBackend($cache_backend, 'entityqueue');
   }

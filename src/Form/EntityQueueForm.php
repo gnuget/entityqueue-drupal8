@@ -146,7 +146,7 @@ class EntityQueueForm extends EntityForm  {
         '%label' => $entityqueue->label(),
       ]));
     }
-    $form_state['redirect_route']['route_name'] = 'entityqueue.list';
+    $form_state->setRedirect('entityqueue.list');
   }
 
   public function exist($id) {
