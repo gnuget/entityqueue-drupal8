@@ -22,7 +22,7 @@ class EntityQueueDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return $this->entity->urlInfo();
+    return new Url('entityqueue.list');
   }
   /**
    * {@inheritdoc}
@@ -34,9 +34,9 @@ class EntityQueueDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->entity->delete();
     drupal_set_message($this->t('Category %label has been deleted.', ['%label' => $this->entity->label()]));
-    $form_state['redirect_route'] = $this->getCancelRoute();
+    $form_state->setRedirectUrl($this->getCancelUrl());
   }
 }
